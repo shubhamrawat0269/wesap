@@ -25,7 +25,7 @@ npm install nodemon --save-dev **NOT NEEDED**
 Note : We don't need nodemon as we have --watch flag which do the same task as nodemon
 ```
 
-## 2. Folder Structure ⏰
+## 2. Folder Structure ✅
 
 ```
 backend/
@@ -39,7 +39,7 @@ backend/
  └── server.js
 ```
 
-## 3. Setup Express Server
+## 3. Setup Express Server ✅
 
 * Create `app.js`
 * Setup middleware:
@@ -47,14 +47,14 @@ backend/
   * JSON parsing
   * CORS
 
-## 4. Connect MongoDB
+## 4. Connect MongoDB ✅
 
 * Use Mongoose
 * Create DB config file
 
 ---
 
-# 🔐 PHASE 2: Authentication (Core Feature)
+# 🔐 PHASE 2: Authentication (Core Feature) ⏰
 
 ## Features
 
