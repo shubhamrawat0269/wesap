@@ -6,7 +6,7 @@ Build a WhatsApp-like chat application using MERN (MongoDB, Express, React, Node
 
 ---
 
-# 🧩 PHASE 1: Project Setup & Backend Foundation
+# 🧩 PHASE 1: Project Setup & Backend Foundation (Completed)
 
 ## 1. Initialize Backend ✅ 
 
