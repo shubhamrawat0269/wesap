@@ -21,10 +21,11 @@ npm init -y
 
 ```bash
 npm install express mongoose dotenv cors bcrypt jsonwebtoken
-npm install nodemon --save-dev
+npm install nodemon --save-dev **NOT NEEDED**
+Note : We don't need nodemon as we have --watch flag which do the same task as nodemon
 ```
 
-## 2. Folder Structure
+## 2. Folder Structure ⏰
 
 ```
 backend/
