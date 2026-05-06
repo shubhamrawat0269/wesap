@@ -1,4 +1,4 @@
-# 📱 MERN WhatsApp Clone – Step-by-Step Roadmap
+# 📱 MERN WhatsApp Clone – Step-by-Step Roadmap ⏰ ✅
 
 ## 🚀 Goal
 
@@ -8,7 +8,7 @@ Build a WhatsApp-like chat application using MERN (MongoDB, Express, React, Node
 
 # 🧩 PHASE 1: Project Setup & Backend Foundation
 
-## 1. Initialize Backend
+## 1. Initialize Backend ✅ 
 
 * Create project folder
 * Initialize Node.js:
