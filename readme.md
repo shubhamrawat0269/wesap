@@ -54,7 +54,7 @@ backend/
 
 ---
 
-# 🔐 PHASE 2: Authentication (Core Feature) ⏰
+# 🔐 PHASE 2: Authentication (Core Feature) ✅
 
 ## Features
 
@@ -83,7 +83,7 @@ backend/
 
 ---
 
-# 💬 PHASE 3: Basic Chat System (1-to-1 Messaging)
+# 💬 PHASE 3: Basic Chat System (1-to-1 Messaging) ⏰
 
 ## Features
 
