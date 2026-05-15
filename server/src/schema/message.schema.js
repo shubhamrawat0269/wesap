@@ -1,26 +1,41 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const messageSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Name is required"],
-      trim: true,
+    conversation: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Conversation",
     },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      lowercase: true,
-      trim: true,
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
     },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minlength: 6,
+    reciever: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
     },
+    content: {
+      type: String,
+    },
+    imageOrVideoUrl: {
+      type: String,
+    },
+    contentType: {
+      type: String,
+      enum: ["image", "video", "text"],
+    },
+    reactions: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        emoji: { type: String },
+      },
+    ],
+    messageStatus: { type: String, default: "send" },
   },
   { timestamps: true },
 );
 
-export default userSchema;
+export default messageSchema;

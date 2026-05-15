@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import userSchema from "../schema/user.schema.js";
+import messageSchema from "../schema/message.schema.js";
 
-const User = mongoose.model("User", userSchema);
+const Message = mongoose.model("Message", messageSchema);
 
-export default User;
+export default Message;
