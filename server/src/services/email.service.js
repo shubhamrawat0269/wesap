@@ -15,156 +15,22 @@ transporter.verify((error, success) => {
 
 export const sendOtpToEmail = async (email, token) => {
   const htmlBody = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+      <h2 style="color: #075e54;">Wesap Web Verification</h2>
+      
+      <p>Hi there,</p>
+      <p>Your one-time password (OTP) to verify your Wesap Web account is:</p>
+      <h1 style="background: #e0f7fa; color: #000; padding: 10px 20px; display: inline-block; border-radius: 5px; letter-spacing: 2px;">
+        ${otp}
+      </h1>
 
-  <title>OTP Verification</title>
-</head>
-
-<body
-  style="
-    margin: 0;
-    padding: 0;
-    background-color: #f4f7fb;
-    font-family: Arial, sans-serif;
-  "
->
-  <table
-    width="100%"
-    cellpadding="0"
-    cellspacing="0"
-    style="padding: 40px 0;"
-  >
-    <tr>
-      <td align="center">
-
-        <table
-          width="600"
-          cellpadding="0"
-          cellspacing="0"
-          style="
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-          "
-        >
-
-          <!-- Logo / Heading -->
-          <tr>
-            <td align="center">
-              <h1
-                style="
-                  margin: 0;
-                  color: #111827;
-                  font-size: 28px;
-                "
-              >
-                Verify Your Account
-              </h1>
-            </td>
-          </tr>
-
-          <!-- Spacer -->
-          <tr>
-            <td height="20"></td>
-          </tr>
-
-          <!-- Message -->
-          <tr>
-            <td align="center">
-              <p
-                style="
-                  color: #4b5563;
-                  font-size: 16px;
-                  line-height: 1.6;
-                  margin: 0;
-                "
-              >
-                Use the OTP below to complete your verification process.
-              </p>
-            </td>
-          </tr>
-
-          <!-- Spacer -->
-          <tr>
-            <td height="30"></td>
-          </tr>
-
-          <!-- OTP Box -->
-          <tr>
-            <td align="center">
-
-              <div
-                style="
-                  display: inline-block;
-                  background: #111827;
-                  color: #ffffff;
-                  padding: 16px 32px;
-                  border-radius: 10px;
-                  font-size: 32px;
-                  font-weight: bold;
-                  letter-spacing: 8px;
-                "
-              >
-                482913
-              </div>
-
-            </td>
-          </tr>
-
-          <!-- Spacer -->
-          <tr>
-            <td height="30"></td>
-          </tr>
-
-          <!-- Expiry -->
-          <tr>
-            <td align="center">
-              <p
-                style="
-                  color: #6b7280;
-                  font-size: 14px;
-                  margin: 0;
-                "
-              >
-                This OTP is valid for 10 minutes.
-              </p>
-            </td>
-          </tr>
-
-          <!-- Spacer -->
-          <tr>
-            <td height="40"></td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td align="center">
-              <p
-                style="
-                  color: #9ca3af;
-                  font-size: 13px;
-                  line-height: 1.5;
-                  margin: 0;
-                "
-              >
-                If you didn’t request this code, you can safely ignore this email.
-              </p>
-            </td>
-          </tr>
-
-        </table>
-
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-`;
+      <p><strong>This OTP is valid for the next 5 minutes.</strong> Please do not share this code with anyone.</p>
+      <p>If you didn’t request this OTP, please ignore this email.</p>
+      <p style="margin-top: 20px;">Thanks & Regards,<br/>Wesap Web Security Team</p>
+      <hr style="margin: 30px 0;" />
+      <small style="color: #777;">This is an automated message. Please do not reply.</small>
+    </div>
+  `;
 
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
