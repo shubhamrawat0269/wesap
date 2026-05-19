@@ -9,11 +9,14 @@ const transporter = nodemailer.createTransport({
 });
 
 transporter.verify((error, success) => {
-  if (error) console.error("Gmail Service connection failed");
-  else console.log(`Gmail configured properly and ready to send email.`);
+  if (error) {
+    console.error("Gmail Service connection failed");
+    return;
+  }
+  console.log(`Gmail configured properly and ready to send email.`);
 });
 
-export const sendOtpToEmail = async (email, token) => {
+export const sendOtpToEmail = async (email, otp) => {
   const htmlBody = `
     <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
       <h2 style="color: #075e54;">Wesap Web Verification</h2>
