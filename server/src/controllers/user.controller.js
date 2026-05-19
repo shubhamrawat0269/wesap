@@ -7,6 +7,16 @@ import { sendOtpToEmail } from "../services/email.service.js";
 import { sendPhoneOtp, verifyPhoneOtp } from "../services/otp.service.js";
 import { generateToken } from "../config/generateToken.js";
 
+/*
+ * TODO TASK: 
+ * 1. Get email or phone from frontend
+ * 2. Generate OTP
+ * 3. Create/find user
+ * 4. Save OTP (for email)
+ * 5. Send OTP
+ * 6. Return response
+ */
+
 const sendOtp = async (req, res) => {
   try {
     const { phoneNumber, phoneSuffix, email } = req.body;
