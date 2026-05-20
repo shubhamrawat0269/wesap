@@ -109,4 +109,30 @@ const verifyOtp = async (req, res) => {
   }
 };
 
+// profile update logic
+/*
+ * Frontend sends multipart/form-data
+ * Multer extracts file
+ * Cloudinary uploads image
+ * Get image URL
+ * Save URL in MongoDB
+*/
+
+const updateProfile = (req, res) => {
+  const { username, agreed, about } = req.body;
+  const userId = req.user.userId;
+
+  try {
+    const user = await User.findById(userId);
+    const file = req.file;
+    
+    if(file) {
+      // logic goes here
+    }
+  } catch (error) {
+    console.error(error.message);
+    return response(res, 500, "Internal Server Error");
+  }
+}
+
 export { sendOtp, verifyOtp };
