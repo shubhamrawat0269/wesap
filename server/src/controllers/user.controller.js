@@ -6,9 +6,10 @@ import response from "../config/responseHandler.js";
 import { sendOtpToEmail } from "../services/email.service.js";
 import { sendPhoneOtp, verifyPhoneOtp } from "../services/otp.service.js";
 import { generateToken } from "../config/generateToken.js";
+import uploadOnCloudinary from "../services/cloudinary.service.js";
 
 /*
- * TODO TASK: 
+ * TODO TASK:
  * 1. Get email or phone from frontend
  * 2. Generate OTP
  * 3. Create/find user
@@ -111,28 +112,50 @@ const verifyOtp = async (req, res) => {
 
 // profile update logic
 /*
- * Frontend sends multipart/form-data
- * Multer extracts file
- * Cloudinary uploads image
- * Get image URL
+ * Frontend sends file
+ * Multer stores temporarily
+ * Controller receives req.file
+ * Upload file manually to Cloudinary
+ * Get secure_url
  * Save URL in MongoDB
-*/
+ * Delete local temp file
+ */
 
-const updateProfile = (req, res) => {
-  const { username, agreed, about } = req.body;
+const updateProfile = async (req, res) => {
+  const { username, agreed, about, profilePicture } = req.body;
   const userId = req.user.userId;
 
   try {
     const user = await User.findById(userId);
-    const file = req.file;
-    
-    if(file) {
-      // logic goes here
+    if (!user) {
+      return response(res, 404, "User not found");
     }
+    const file = req.file;
+
+    if (file) {
+      const uploadedImage = await uploadOnCloudinary(file.path);
+      // Save image URL
+      if (uploadedImage) {
+        user.profilePicture = uploadedImage.secure_url;
+      }
+
+      // Delete local file
+      await fs.promises.unlink(file.path);
+    } else if (profilePicture) {
+      user.profilePicture = profilePicture;
+    }
+
+    // Update fields
+    if (username !== undefined) user.username = username;
+    if (about !== undefined) user.about = about;
+    if (agreed !== undefined) user.agreed = agreed;
+
+    await user.save();
+    return response(res, 200, "Profile updated successfully", user);
   } catch (error) {
     console.error(error.message);
     return response(res, 500, "Internal Server Error");
   }
-}
+};
 
-export { sendOtp, verifyOtp };
+export { sendOtp, verifyOtp, updateProfile };
