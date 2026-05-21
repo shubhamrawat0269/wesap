@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import fs from "fs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { otpGenerator } from "../config/otpgenerator.js";
@@ -133,14 +134,16 @@ const updateProfile = async (req, res) => {
     const file = req.file;
 
     if (file) {
-      const uploadedImage = await uploadOnCloudinary(file.path);
-      // Save image URL
-      if (uploadedImage) {
-        user.profilePicture = uploadedImage.secure_url;
+      try {
+        const uploadedImage = await uploadOnCloudinary(file.path);
+        // Save image URL
+        if (uploadedImage) {
+          user.profilePicture = uploadedImage.secure_url;
+        }
+      } finally {
+        // Delete local file
+        if (file.path) await fs.promises.unlink(file.path);
       }
-
-      // Delete local file
-      await fs.promises.unlink(file.path);
     } else if (profilePicture) {
       user.profilePicture = profilePicture;
     }
