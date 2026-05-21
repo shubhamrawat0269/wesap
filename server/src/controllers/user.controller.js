@@ -161,4 +161,35 @@ const updateProfile = async (req, res) => {
   }
 };
 
-export { sendOtp, verifyOtp, updateProfile };
+const checkAuthenticated = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    if (!userId) {
+      return response(res, 404, "Please Login before accessing feature");
+    }
+    const user = await User.findById(userId);
+    if (!user) return response(res, 404, "User Not Found");
+
+    return response(
+      res,
+      200,
+      "User Found !! Allowed to use our application",
+      user,
+    );
+  } catch (error) {
+    console.error(error.message);
+    return response(res, 500, "Internal Server Error");
+  }
+};
+
+const userLogout = (req, res) => {
+  try {
+    res.cookie("auth_token", "", { expries: new Date(0) });
+    return response(res, 200, "User Logout Successfully");
+  } catch (error) {
+    console.error(error.message);
+    return response(res, 500, "Internal Server Error");
+  }
+};
+
+export { sendOtp, verifyOtp, updateProfile, userLogout, checkAuthenticated };
