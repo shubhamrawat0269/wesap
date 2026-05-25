@@ -3,6 +3,7 @@ import {
   sendOtp,
   verifyOtp,
   userLogout,
+  getAllUsers,
   updateProfile,
   checkAuthenticated,
 } from "../controllers/user.controller.js";
@@ -24,5 +25,6 @@ router.put(
 );
 
 router.get("/check-auth", authMiddleware, checkAuthenticated);
+router.get("/get-users", authMiddleware, getAllUsers);
 
 export default router;

@@ -192,4 +192,50 @@ const userLogout = (req, res) => {
   }
 };
 
-export { sendOtp, verifyOtp, updateProfile, userLogout, checkAuthenticated };
+const getAllUsers = async (req, res) => {
+  const loggedInUser = req.user.userId;
+  try {
+    const users = await User.find({ _id: { $ne: loggedInUser } })
+      .select(
+        "username profilePicture lastSeen isOnline about phoneNumber phoneSuffix",
+      )
+      .lean();
+
+    const usersWithConversation = await Promise.all(
+      users.map(async (user) => {
+        const conversation = await Conversation.findOne({
+          participants: { $all: [loggedInUser.user?._id] },
+        })
+          .populate({
+            path: "lastMessage",
+            select: "content createdAt sender reciever",
+          })
+          .lean();
+
+        return {
+          ...user,
+          conversation: conversation | null,
+        };
+      }),
+    );
+
+    return response(
+      res,
+      200,
+      "User Retrieved Successfully",
+      usersWithConversation,
+    );
+  } catch (error) {
+    console.error(error.message);
+    return response(res, 500, "Internal Server Error");
+  }
+};
+
+export {
+  sendOtp,
+  verifyOtp,
+  userLogout,
+  getAllUsers,
+  updateProfile,
+  checkAuthenticated,
+};

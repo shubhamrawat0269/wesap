@@ -10,10 +10,10 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((error, success) => {
   if (error) {
-    console.error("Gmail Service connection failed");
+    console.error("❌ Gmail Service connection failed");
     return;
   }
-  console.log(`Gmail configured properly and ready to send email.`);
+  console.log(`✅ Gmail configured properly and ready to send email.`);
 });
 
 export const sendOtpToEmail = async (email, otp) => {
