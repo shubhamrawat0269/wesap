@@ -5,11 +5,10 @@ import uploadOnCloudinary from "../services/cloudinary.service.js";
 
 const sendMessage = async (req, res) => {
   try {
-    const { senderId, recieverId, content, messageStatus } = req.body;
+    const { sender, reciever, content, messageStatus } = req.body;
     const file = req.file;
 
-    const participants = [senderId, recieverId].sort();
-
+    const participants = [sender, reciever].sort();
     let conversation = await Conversation.findOne({
       participants,
     });
@@ -44,8 +43,8 @@ const sendMessage = async (req, res) => {
 
     const message = new Message({
       conversation: conversation?._id,
-      sender: senderId,
-      receiver: recieverId,
+      sender,
+      reciever,
       content,
       contentType,
       imageOrVideoUrl,
@@ -60,7 +59,7 @@ const sendMessage = async (req, res) => {
 
     const populateMessage = await Message.findById(message._id)
       .populate("sender", "username profilePicture")
-      .populate("receiver", "username profilePicture");
+      .populate("reciever", "username profilePicture");
 
     return response(res, 201, "Message Send Successfully", populateMessage);
   } catch (error) {
