@@ -6,7 +6,7 @@ import Message from "../models/message.model.js";
 const onlineUsers = new Map();
 const typingUsers = new Map();
 
-const initiazeSockets = (server) => {
+export const initiazeSockets = (server) => {
   const io = new Server(server, {
     cors: {
       origin: process.env.CLIENT_LOCAL_URL,
@@ -218,5 +218,11 @@ const initiazeSockets = (server) => {
         console.error("Error in disconnecting", error.message);
       }
     };
+
+    socket.on("disconnect", handleDisconnected);
   });
+
+  io.socketUserMap = onlineUsers;
+
+  return io;
 };
