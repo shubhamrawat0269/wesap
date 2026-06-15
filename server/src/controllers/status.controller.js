@@ -47,9 +47,18 @@ const createStatus = async (req, res) => {
       .populate("user", "username profilePicture")
       .populate("viewers", "username profilePicture");
 
+    // emit socket event
+    if (req.io && req.socketUserMap) {
+      for (const [connectedUserId, socketId] of req.socketUserMap) {
+        if (connectedUserId !== userId) {
+          req.io.to(socketId).emit("new_status", populateStatus);
+        }
+      }
+    }
+
     return response(res, 201, "Status Created Successfully", populateStatus);
   } catch (error) {
-    console.error('CREATE STATUS CONTROLLER', error);
+    console.error("CREATE STATUS CONTROLLER", error);
     return response(res, 500, "Internal Server Error");
   }
 };
@@ -84,6 +93,25 @@ const viewStatus = async (req, res) => {
       const updateStatus = await Status.findById(statusId)
         .populate("user", "username profilePicture")
         .populate("viewers", "username profilePicture");
+
+      // emit socket event
+      if (req.io && req.socketUserMap) {
+        const statusOwnerSocketId = req.socketUserMap.get(
+          status.user._id.toString(),
+        );
+        if (statusOwnerSocketId) {
+          const viewData = {
+            statusId,
+            viewerId: userId,
+            totalViewers: updateStatus.viewers.length,
+            viewers: updateStatus.viewers,
+          };
+
+          req.io.to(statusOwnerSocketId).emit("status_viewed", viewData);
+        } else {
+          console.log("Status Owner Not Connected");
+        }
+      }
     } else {
       console.log("User already viewed the status");
     }
@@ -109,6 +137,16 @@ const deleteStatus = async (req, res) => {
     }
 
     await status.deleteOne();
+
+    // emit socket event
+    if (req.io && req.socketUserMap) {
+      for (const [connectedUserId, socketId] of req.socketUserMap) {
+        if (connectedUserId !== userId) {
+          req.io.to(socketId).emit("status_deleted", statusId);
+        }
+      }
+    }
+
     return response(res, 200, "Status Deleted Successfully");
   } catch (error) {
     console.error(error.message);
