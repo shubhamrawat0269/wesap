@@ -1,5 +1,4 @@
 import Status from "../models/status.model.js";
-import Message from "../models/message.model.js";
 import response from "../config/responseHandler.js";
 import uploadOnCloudinary from "../services/cloudinary.service.js";
 
@@ -27,7 +26,7 @@ const createStatus = async (req, res) => {
       else if (file.mimetype.startWith("video")) finalContentType = "video";
       else return response(res, 400, "Unsupported File Type");
     } else if (content?.trim()) {
-      contentType = "text";
+      finalContentType = "text";
     } else {
       return response(res, 400, "Message Content is Required");
     }
@@ -39,17 +38,18 @@ const createStatus = async (req, res) => {
       user: userId,
       content: mediaUrl || content,
       contentType: finalContentType,
+      expiresAt,
     });
 
     await status.save();
 
-    const populateStatus = await Message.findOne(status._id)
+    const populateStatus = await Status.findOne(status._id)
       .populate("user", "username profilePicture")
       .populate("viewers", "username profilePicture");
 
     return response(res, 201, "Status Created Successfully", populateStatus);
   } catch (error) {
-    console.error(error.message);
+    console.error('CREATE STATUS CONTROLLER', error);
     return response(res, 500, "Internal Server Error");
   }
 };
