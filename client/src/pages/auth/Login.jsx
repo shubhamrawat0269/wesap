@@ -4,6 +4,7 @@ import countries from '../../utils/countries'
 import { useNavigate } from 'react-router-dom'
 import useUserStore from '../../store/useUserStore'
 import useLoginStore from '../../store/useLoginStore'
+import useThemeStore from '../../store/useThemeStore'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 const loginValidationShema = yup
@@ -14,17 +15,17 @@ const loginValidationShema = yup
       .nullable()
       .notRequired()
       .matches(/^\d+$/, 'Phone Number must be a digit')
-      .transform((value, originalValue) => {
+      .transform((value, originalValue) =>
         originalValue.trim() === '' ? null : value
-      }),
+      ),
     email: yup
       .string()
       .nullable()
       .notRequired()
       .email('Please Enter Valid Email')
-      .transform((value, originalValue) => {
+      .transform((value, originalValue) =>
         originalValue.trim() === '' ? null : value
-      }),
+      ),
   })
   .test(
     'at-least-one',
@@ -66,6 +67,7 @@ const Login = () => {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const { setUser } = useUserStore()
+  const { theme, setTheme } = useThemeStore()
 
   const {
     register: loginRegister,
@@ -92,7 +94,11 @@ const Login = () => {
     resolver: yupResolver(profileValidationSchema),
   })
 
-  return <div>Login</div>
+  return (
+    <div
+      className={`min-h-screen ${theme == 'dark' ? 'bg-gray-900' : ' from-green-400 to-blue-500'} flex items-center justify-center p-4 overflow-hidden`}
+    ></div>
+  )
 }
 
 export default Login
