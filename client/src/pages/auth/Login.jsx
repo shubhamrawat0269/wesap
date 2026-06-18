@@ -1,11 +1,13 @@
 import * as yup from 'yup'
 import { useState } from 'react'
+import {avatars} from '../../utils/avatar'
 import countries from '../../utils/countries'
 import { useNavigate } from 'react-router-dom'
 import useUserStore from '../../store/useUserStore'
 import useLoginStore from '../../store/useLoginStore'
 import useThemeStore from '../../store/useThemeStore'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 
 const loginValidationShema = yup
   .object()
@@ -62,7 +64,7 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [profilePicture, setProfilePicture] = useState(null)
   // avatar not yet included
-  const [selectedAvatar, setSelectedAvatar] = useState(avatar[0])
+  const [selectedAvatar, setSelectedAvatar] = useState(avatars[0])
   const [profilePictureFile, setProfilePictureFile] = useState(null)
   const [error, setError] = useState('')
   const navigate = useNavigate()
@@ -96,7 +98,7 @@ const Login = () => {
 
   return (
     <div
-      className={`min-h-screen ${theme == 'dark' ? 'bg-gray-900' : ' from-green-400 to-blue-500'} flex items-center justify-center p-4 overflow-hidden`}
+      className={`min-h-screen ${theme == 'dark' ? 'bg-gray-900' : 'bg-linear-to-br from-green-400 to-blue-500'} flex items-center justify-center p-4 overflow-hidden`}
     ></div>
   )
 }
