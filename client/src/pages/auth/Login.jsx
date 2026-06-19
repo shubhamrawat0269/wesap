@@ -9,7 +9,8 @@ import useUserStore from '../../store/useUserStore'
 import useLoginStore from '../../store/useLoginStore'
 import useThemeStore from '../../store/useThemeStore'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { FaWhatsapp } from 'react-icons/fa'
+import { FaChevronDown, FaUser, FaWhatsapp } from 'react-icons/fa'
+import Spinner from '../../components/Spinner'
 
 const loginValidationShema = yup
   .object()
@@ -81,7 +82,10 @@ const Login = () => {
   // avatar not yet included
   const [selectedAvatar, setSelectedAvatar] = useState(avatars[0])
   const [profilePictureFile, setProfilePictureFile] = useState(null)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { setUser } = useUserStore()
   const { theme, setTheme } = useThemeStore()
@@ -110,6 +114,21 @@ const Login = () => {
   } = useForm({
     resolver: yupResolver(profileValidationSchema),
   })
+
+  const filerCountries = countries.filter(
+    (country) =>
+      country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      country.dialCode.includes(searchTerm)
+  )
+
+  const onLoginSubmit = async () => {
+    try {
+      setLoading(true)
+      if (email) {
+        //
+      }
+    } catch (error) {}
+  }
 
   return (
     <div
@@ -141,6 +160,125 @@ const Login = () => {
         </h1>
 
         <ProgressBar step={step} theme={theme} />
+
+        {error && (
+          <p className="text-red-500 text-center mb-4">{error}</p>
+        )}
+
+        {step == 1 && (
+          <form className="space-y-4">
+            <p
+              className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
+            >
+              Enter yourphone number to receive an OTP
+            </p>
+
+            <div className="relative">
+              <div className="flex">
+                <div className="relative w-1/3">
+                  <button
+                    type="button"
+                    className={`flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center ${theme === 'dark' ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-900 bg-gray-100 border-gray-300'} border rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100`}
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    <span>
+                      {selectedCountry.flag}{' '}
+                      {selectedCountry.dialCode}
+                    </span>
+                    <FaChevronDown className="ml-2" />
+                  </button>
+
+                  {showDropdown && (
+                    <div
+                      className={`absolute z-10 w-full mt-1 ${theme == 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'} border rounded-md shadow-lg max-h-60 overflow-auto`}
+                    >
+                      <div
+                        className={`sticky top-0 ${theme == 'dark' ? 'bg-gray-700' : 'bg-white'} p-2`}
+                      >
+                        <input
+                          type="text"
+                          placeholder="Search Countries..."
+                          value={searchTerm}
+                          onChange={(e) =>
+                            setSearchTerm(e.target.value)
+                          }
+                          className={`w-full px-2 py-1 border ${theme == 'dark' ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'} rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500`}
+                        />
+                      </div>
+
+                      {filerCountries.map((country) => (
+                        <button
+                          key={country.alpha2}
+                          type="button"
+                          className={`w-full text-left px-3 py-2 ${theme == 'dark' ? 'hover:bg-gray-600' : 'hover:bg-gray-100'} focus:outline-none focus:bg-gray-100`}
+                          onClick={() => {
+                            setSelectedCountry(country)
+                            setShowDropdown(false)
+                          }}
+                        >
+                          {country.flag} ({country.dialCode}){' '}
+                          {country.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  {...loginRegister('phoneNumber')}
+                  value={phoneNumber}
+                  placeholder="phone number"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className={`w-2/3 px-4 py-2 border ${theme == 'dark' ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${loginErrors.phoneNumber ? 'border-red-500' : ''}`}
+                />
+              </div>
+
+              {loginErrors.phoneNumber && (
+                <p className="text-red-500 text-sm">
+                  {loginErrors.phoneNumber.message}
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center my-4">
+              <div className="flex-grow h-px bg-gray-300" />
+              <span className="mx-3 text-gray-300 text-sm font-medium">
+                Or
+              </span>
+              <div className="flex-grow h-px bg-gray-300" />
+            </div>
+
+            <div
+              className={`flex items-center border rounded-md px-3 py-2 ${theme == 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+            >
+              <FaUser
+                className={`mr-2 text-gray-400 ${theme == 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
+              />
+
+              <input
+                type="email"
+                {...loginRegister('email')}
+                value={email}
+                placeholder="Email (optional)"
+                onChange={(e) => setEmail(e.target.value)}
+                className={`w-full bg-transparent focus:outline-none ${theme == 'dark' ? 'text-white' : 'text-black'} ${loginErrors.email ? 'border-red-500' : ''}`}
+              />
+
+              {loginErrors.email && (
+                <p className="text-red-500 text-sm">
+                  {loginErrors.email.message}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition"
+            >
+              {loading ? <Spinner /> : 'Send OTP'}
+            </button>
+          </form>
+        )}
       </motion.div>
     </div>
   )
