@@ -11,6 +11,11 @@ import useThemeStore from '../../store/useThemeStore'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { FaChevronDown, FaUser, FaWhatsapp } from 'react-icons/fa'
 import Spinner from '../../components/Spinner'
+import {
+  sendOtp,
+  updateUserProfile,
+  verifyOtp,
+} from '../../services/user.service'
 
 const loginValidationShema = yup
   .object()
@@ -125,9 +130,125 @@ const Login = () => {
     try {
       setLoading(true)
       if (email) {
-        //
+        const response = await sendOtp(null, null, email)
+        if (response.status === 'success') {
+          toast.success('OTP is send to your email')
+          setUserPhoneData({ email })
+          setStep(2)
+        }
+      } else {
+        const response = await sendOtp(
+          phoneNumber,
+          selectedCountry.dialCode
+        )
+        if (response.status === 'success') {
+          toast.success('OTP is send to phone number')
+          setUserPhoneData({
+            phoneNumber,
+            phoneSuffix: selectedCountry.dialCode,
+          })
+          setStep(2)
+        }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+      setError(error.message || 'Failed to send OTP')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const onOtpSubmit = async () => {
+    try {
+      setLoading(true)
+      if (!userPhoneData) {
+        throw new Error('Phone or email data is missing')
+      }
+      const otpString = otp.join('')
+      let response
+      if (userPhoneData?.email) {
+        response = await verifyOtp(
+          null,
+          null,
+          otpString,
+          userPhoneData.email
+        )
+      } else {
+        response = await verifyOtp(
+          userPhoneData.phoneNumber,
+          userPhoneData.phoneSuffix,
+          otpString
+        )
+      }
+
+      if (response.status === 'success') {
+        toast.success('OTP verify successfully')
+        const user = response.data?.user
+        if (user?.username && user?.profilePicture) {
+          setUser(user)
+          toast.success('Welcome back to Wesap')
+          navigate('/')
+          resetLoginState()
+        } else {
+          setStep(3)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      setError(error.message || 'Failed to verify OTP')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setProfilePictureFile(file)
+      setProfilePicture(URL.createObjectURL(file))
+    }
+  }
+
+  const onProfileSubmit = async (data) => {
+    try {
+      setLoading(true)
+      const formData = new FormData()
+      formData.append('username', data.username)
+      formData.append('agreed', data.agreed)
+
+      if (profilePictureFile) {
+        formData.append('media', profilePictureFile)
+      } else {
+        formData.append('profilePicture', selectedAvatar)
+      }
+
+      await updateUserProfile(formData)
+      toast.success('Welcome back to Whatsapp')
+      navigate('/')
+      resetLoginState()
+    } catch (error) {
+      console.log(error)
+      setError(error.message || 'Failed to verify OTP')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleOtpChange = (index, value) => {
+    const newOtp = [...otp]
+    newOtp[index] = value
+    setOtp(newOtp)
+    setOtpValue('otp', newOtp.join(''))
+    if (value && index < 5) {
+      document.getElementById(`otp-${index + 1}`).focus()
+    }
+  }
+
+  const handleBack = () => {
+    setStep(1)
+    setUserPhoneData(null)
+    setOtp(['', '', '', '', '', ''])
+    setError(null)
   }
 
   return (

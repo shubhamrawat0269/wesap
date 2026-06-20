@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 
 import RootLayout from './layouts/RootLayout'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 
 import Chat from './pages/chats/Chat'
 import Login from './pages/auth/Login'
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Toaster position="top-center" />
     <RouterProvider router={router} />
   </StrictMode>
 )
