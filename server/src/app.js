@@ -12,8 +12,22 @@ import { initiazeSockets } from "./services/socket.service.js";
 const app = express();
 app.use(
   cors({
-    origin: [process.env.CLIENT_LOCAL_URL],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        process.env.CLIENT_LOCAL_URL,
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+      ].filter(Boolean);
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
@@ -34,7 +48,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/users", userRoutes);
+app.use("/api/auth", userRoutes);
 app.use("/api/chat", messageRoutes);
 app.use("/api/status", statusRoutes);
 

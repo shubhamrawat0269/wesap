@@ -9,6 +9,7 @@ import useUserStore from '../../store/useUserStore'
 import useLoginStore from '../../store/useLoginStore'
 import useThemeStore from '../../store/useThemeStore'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { toast } from 'react-hot-toast'
 import {
   FaArrowLeft,
   FaChevronDown,
@@ -146,6 +147,7 @@ const Login = () => {
           phoneNumber,
           selectedCountry.dialCode
         )
+        console.log(response, 'RESPONSE')
         if (response.status === 'success') {
           toast.success('OTP is send to phone number')
           setUserPhoneData({
@@ -175,13 +177,14 @@ const Login = () => {
         response = await verifyOtp(
           null,
           null,
-          otpString,
-          userPhoneData.email
+          userPhoneData.email,
+          otpString
         )
       } else {
         response = await verifyOtp(
           userPhoneData.phoneNumber,
           userPhoneData.phoneSuffix,
+          null,
           otpString
         )
       }

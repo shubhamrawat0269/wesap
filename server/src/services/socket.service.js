@@ -9,7 +9,21 @@ const typingUsers = new Map();
 export const initiazeSockets = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_LOCAL_URL,
+      origin: function (origin, callback) {
+        const allowedOrigins = [
+          process.env.CLIENT_LOCAL_URL,
+          "http://localhost:5173",
+          "http://localhost:3000",
+          "http://127.0.0.1:5173",
+          "http://127.0.0.1:3000",
+        ].filter(Boolean);
+
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
       credentials: true,
       methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
     },

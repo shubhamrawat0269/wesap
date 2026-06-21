@@ -13,6 +13,7 @@ const sendPhoneOtp = async (phoneNumber) => {
     });
   } catch (error) {
     console.error(`Error: ${error.message}`);
+    return { status: "error", message: error.message };
   }
 };
 
@@ -28,6 +29,7 @@ const verifyPhoneOtp = async (phoneNumber, otp) => {
       });
   } catch (error) {
     console.error(`Error: ${error.message}`);
+    return { status: "error", message: error.message };
   }
 };
 

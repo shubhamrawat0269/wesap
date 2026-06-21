@@ -92,8 +92,9 @@ const verifyOtp = async (req, res) => {
       }
 
       const result = await verifyPhoneOtp(fullPhoneNumber, otp);
-      if (result.status !== "approved")
-        return response(res, 400, "Invalid Otp");
+      if (!result || result.status !== "approved") {
+        return response(res, 400, "Invalid or Expired Otp");
+      }
 
       user.isVerified = true;
       await user.save();

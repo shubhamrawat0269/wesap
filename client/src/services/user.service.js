@@ -11,10 +11,16 @@ export const sendOtp = async (phoneNumber, phoneSuffix, email) => {
     return response.data
   } catch (error) {
     console.error(error.message)
+    return { status: 'error', message: error.message }
   }
 }
 
-export const verifyOtp = async (phoneNumber, phoneSuffix, email, otp) => {
+export const verifyOtp = async (
+  phoneNumber,
+  phoneSuffix,
+  email,
+  otp
+) => {
   try {
     const response = await axiosInstance.post('/auth/verify-otp', {
       phoneNumber,
@@ -26,15 +32,20 @@ export const verifyOtp = async (phoneNumber, phoneSuffix, email, otp) => {
     return response.data
   } catch (error) {
     console.error(error.message)
+    return { status: 'error', message: error.message }
   }
 }
 
 export const updateUserProfile = async (updatedData) => {
   try {
-    const response = await axiosInstance.put('/auth/update-profile', updatedData)
+    const response = await axiosInstance.put(
+      '/auth/update-profile',
+      updatedData
+    )
     return response.data
   } catch (error) {
     console.error(error.message)
+    return { status: 'error', message: error.message }
   }
 }
 
@@ -44,6 +55,7 @@ export const logoutUser = async () => {
     return response.data
   } catch (error) {
     console.error(error.message)
+    return { status: 'error', message: error.message }
   }
 }
 
@@ -53,6 +65,7 @@ export const getAllUsers = async () => {
     return response.data
   } catch (error) {
     console.error(error.message)
+    return { status: 'error', message: error.message }
   }
 }
 
@@ -71,5 +84,6 @@ export const checkUserAuth = async (updatedData) => {
     }
   } catch (error) {
     console.error(error.message)
+    return { isAuthenticated: false }
   }
 }
