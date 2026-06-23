@@ -1,9 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../components/Layout'
 import { motion } from 'framer-motion'
 import Chat from '../chats/Chat'
+import useLayoutStore from '../../store/useLayoutStore'
+import { getAllUsers } from '../../services/user.service'
 
 const Home = () => {
+  const setSelectedContact = useLayoutStore(
+    (state) => state.setSelectedContact
+  )
+  const [allUsers, setAllUsers] = useState([])
+
+  const getAllUser = async () => {
+    try {
+      const result = await getAllUsers()
+      if (result.status === 'success') {
+        setAllUsers(result.data)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    getAllUser()
+  }, [])
+
   return (
     <Layout>
       <motion.div
@@ -12,7 +34,10 @@ const Home = () => {
         transition={{ duration: 0.5 }}
         className="h-full"
       >
-        <Chat />
+        <Chat
+          contacts={allUsers}
+          setSelectedContact={setSelectedContact}
+        />
       </motion.div>
     </Layout>
   )

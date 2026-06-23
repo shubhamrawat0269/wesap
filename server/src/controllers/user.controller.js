@@ -8,6 +8,7 @@ import { sendOtpToEmail } from "../services/email.service.js";
 import { sendPhoneOtp, verifyPhoneOtp } from "../services/otp.service.js";
 import { generateToken } from "../config/generateToken.js";
 import uploadOnCloudinary from "../services/cloudinary.service.js";
+import Conversation from "../models/conversation.model.js";
 
 /*
  * TODO TASK:

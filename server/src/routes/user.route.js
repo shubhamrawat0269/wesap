@@ -25,6 +25,6 @@ router.put(
 );
 
 router.get("/check-auth", authMiddleware, checkAuthenticated);
-router.get("/get-users", authMiddleware, getAllUsers);
+router.get("/users", authMiddleware, getAllUsers);
 
 export default router;
