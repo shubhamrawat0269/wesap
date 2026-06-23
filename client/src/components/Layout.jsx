@@ -1,11 +1,12 @@
 import { useLocation } from 'react-router-dom'
 import useLayoutStore from '../store/useLayoutStore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useThemeStore from '../store/useThemeStore'
 import { AnimatePresence } from 'framer-motion'
 import ChatWindow from '../pages/chats/ChatWindow'
 import Sidebar from './Sidebar'
 import { motion } from 'framer-motion'
+import { useEffect } from 'react'
 
 const Layout = ({
   children,
@@ -23,6 +24,16 @@ const Layout = ({
   const location = useLocation()
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   const { theme, setTheme } = useThemeStore()
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [third])
+
   return (
     <div
       className={`min-h-screen ${theme === 'dark' ? 'bg-[#111b21] text-white' : 'bg-gray-100 text-black'} flex relative`}
