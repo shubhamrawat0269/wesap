@@ -6,7 +6,6 @@ import { AnimatePresence } from 'framer-motion'
 import ChatWindow from '../pages/chats/ChatWindow'
 import Sidebar from './Sidebar'
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
 
 const Layout = ({
   children,
@@ -32,7 +31,7 @@ const Layout = ({
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [third])
+  }, [])
 
   return (
     <div
