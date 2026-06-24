@@ -20,10 +20,8 @@ const createStatus = async (req, res) => {
 
       mediaUrl = uploadFile?.secure_url;
 
-      // TODO : How to set content type
-      //   console.log(file.mimetype, "FILE TYPE");
-      if (file.mimetype.startWith("image")) finalContentType = "image";
-      else if (file.mimetype.startWith("video")) finalContentType = "video";
+      if (file.mimetype.startsWith("image")) finalContentType = "image";
+      else if (file.mimetype.startsWith("video")) finalContentType = "video";
       else return response(res, 400, "Unsupported File Type");
     } else if (content?.trim()) {
       finalContentType = "text";

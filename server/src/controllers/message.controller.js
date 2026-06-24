@@ -33,8 +33,9 @@ const sendMessage = async (req, res) => {
 
       imageOrVideoUrl = uploadFile.secure_url;
 
-      // TODO : How to set content type
-      console.log(file.mimetype, "FILE TYPE");
+      if (file.mimetype.startsWith("image")) contentType = "image";
+      else if (file.mimetype.startsWith("video")) contentType = "video";
+      else return response(res, 400, "Unsupported File Type");
     } else if (content?.trim()) {
       contentType = "text";
     } else {
