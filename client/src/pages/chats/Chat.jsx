@@ -3,6 +3,8 @@ import useLayoutStore from '../../store/useLayoutStore'
 import useThemeStore from '../../store/useThemeStore'
 import useUserStore from '../../store/useUserStore'
 import { FaPlus, FaSearch } from 'react-icons/fa'
+import { motion } from 'framer-motion'
+import formatTimestamp from '../../utils/formatTimeStamp'
 
 const Chat = ({ contacts }) => {
   const setSelectedContact = useLayoutStore(
@@ -70,6 +72,33 @@ const Chat = ({ contacts }) => {
                 >
                   {contact?.username}
                 </h2>
+                {contact?.conversation && (
+                  <span
+                    className={`text-xs ${theme == 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
+                  >
+                    {formatTimestamp(
+                      contact?.conversation?.lastMessage?.createdAt
+                    )}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex justify-between items-baseline">
+                <p
+                  className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} truncate`}
+                >
+                  {contact?.conversation?.lastMessage?.content}
+                </p>
+                {contact?.conversation &&
+                  contact?.conversation?.unreadCount > 0 &&
+                  contact?.conversation?.lastMessage?.receiver ===
+                    user?._id && (
+                    <p
+                      className={`text-sm font-semibold w-6 h-6 flex items-center justify-center bg-yellow-500 ${theme === 'dark' ? 'text-gray-800' : 'text-gray-500'} rounded-full`}
+                    >
+                      {contact?.conversation?.unreadCount}
+                    </p>
+                  )}
               </div>
             </div>
           </motion.div>
