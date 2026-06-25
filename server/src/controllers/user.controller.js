@@ -206,11 +206,11 @@ const getAllUsers = async (req, res) => {
     const usersWithConversation = await Promise.all(
       users.map(async (user) => {
         const conversation = await Conversation.findOne({
-          participants: { $all: [loggedInUser.user?._id] },
+          participants: { $all: [loggedInUser, user._id] },
         })
           .populate({
             path: "lastMessage",
-            select: "content createdAt sender reciever",
+            select: "content createdAt sender receiver",
           })
           .lean();
 

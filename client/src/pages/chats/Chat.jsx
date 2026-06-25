@@ -18,7 +18,8 @@ const Chat = ({ contacts }) => {
   const { user } = useUserStore()
 
   const [searchTerms, setSearchTerms] = useState('')
-  const filteredContacts = contacts?.filter((contact) =>
+  const safeContacts = Array.isArray(contacts) ? contacts : []
+  const filteredContacts = safeContacts.filter((contact) =>
     contact?.username
       ?.toLowerCase()
       .includes(searchTerms.toLowerCase())
@@ -53,56 +54,64 @@ const Chat = ({ contacts }) => {
       </div>
 
       <div className="overflow-y-auto h-[calc(100vh-120px)]">
-        {filteredContacts.map((contact) => (
-          <motion.div
-            key={contact._id}
-            onClick={() => setSelectedContact(contact)}
-            className={`p-3 flex items-center cursor-pointer ${theme == 'dark' ? (selectedContact?._id === contact?._id ? 'bg-gray-700 hover:bg-gray-800' : selectedContact?._id === contact?._id ? 'bg-gray-700' : 'bg-gray-200') : 'hover:bg-gray-100'}`}
+        {filteredContacts.length === 0 ? (
+          <div
+            className={`p-4 text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
           >
-            <img
-              src={contact?.profilePicture}
-              alt={contact?.username}
-              className="w-12 h-12 rounded-full"
-            />
+            No contacts found.
+          </div>
+        ) : (
+          filteredContacts.map((contact) => (
+            <motion.div
+              key={contact._id}
+              onClick={() => setSelectedContact(contact)}
+              className={`p-3 flex items-center cursor-pointer ${theme == 'dark' ? (selectedContact?._id === contact?._id ? 'bg-gray-700 hover:bg-gray-800' : 'hover:bg-gray-700') : 'hover:bg-gray-100'}`}
+            >
+              <img
+                src={contact?.profilePicture}
+                alt={contact?.username}
+                className="w-12 h-12 rounded-full"
+              />
 
-            <div className="ml-3 flex-1">
-              <div className="flex justify-between items-baseline">
-                <h2
-                  className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'}`}
-                >
-                  {contact?.username}
-                </h2>
-                {contact?.conversation && (
-                  <span
-                    className={`text-xs ${theme == 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
+              <div className="ml-3 flex-1">
+                <div className="flex justify-between items-baseline">
+                  <h2
+                    className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'}`}
                   >
-                    {formatTimestamp(
-                      contact?.conversation?.lastMessage?.createdAt
-                    )}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex justify-between items-baseline">
-                <p
-                  className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} truncate`}
-                >
-                  {contact?.conversation?.lastMessage?.content}
-                </p>
-                {contact?.conversation &&
-                  contact?.conversation?.unreadCount > 0 &&
-                  contact?.conversation?.lastMessage?.receiver ===
-                    user?._id && (
-                    <p
-                      className={`text-sm font-semibold w-6 h-6 flex items-center justify-center bg-yellow-500 ${theme === 'dark' ? 'text-gray-800' : 'text-gray-500'} rounded-full`}
+                    {contact?.username}
+                  </h2>
+                  {contact?.conversation && (
+                    <span
+                      className={`text-xs ${theme == 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
                     >
-                      {contact?.conversation?.unreadCount}
-                    </p>
+                      {formatTimestamp(
+                        contact?.conversation?.lastMessage?.createdAt
+                      )}
+                    </span>
                   )}
+                </div>
+
+                <div className="flex justify-between items-baseline">
+                  <p
+                    className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} truncate`}
+                  >
+                    {contact?.conversation?.lastMessage?.content}
+                  </p>
+                  {contact?.conversation &&
+                    contact?.conversation?.unreadCount > 0 &&
+                    contact?.conversation?.lastMessage?.receiver ===
+                      user?._id && (
+                      <p
+                        className={`text-sm font-semibold w-6 h-6 flex items-center justify-center bg-yellow-500 ${theme === 'dark' ? 'text-gray-800' : 'text-gray-500'} rounded-full`}
+                      >
+                        {contact?.conversation?.unreadCount}
+                      </p>
+                    )}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))
+        )}
       </div>
     </div>
   )

@@ -311,7 +311,7 @@ const Login = () => {
                 <div className="relative w-1/3">
                   <button
                     type="button"
-                    className={`flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center ${theme === 'dark' ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-900 bg-gray-100 border-gray-300'} border rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100`}
+                    className={`shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center ${theme === 'dark' ? 'text-white bg-gray-700 border-gray-600' : 'text-gray-900 bg-gray-100 border-gray-300'} border rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100`}
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
                     <span>
@@ -374,11 +374,11 @@ const Login = () => {
             </div>
 
             <div className="flex items-center my-4">
-              <div className="flex-grow h-px bg-gray-300" />
+              <div className="grow h-px bg-gray-300" />
               <span className="mx-3 text-gray-300 text-sm font-medium">
                 Or
               </span>
-              <div className="flex-grow h-px bg-gray-300" />
+              <div className="grow h-px bg-gray-300" />
             </div>
 
             <div
