@@ -39,7 +39,7 @@ export const ProtectedRoute = ({ children }) => {
   return children
 }
 
-export const PublicRoute = () => {
+export const PublicRoute = ({ children }) => {
   const isAuthenticated = useUserStore(
     (state) => state.isAuthenticated
   )
@@ -47,5 +47,5 @@ export const PublicRoute = () => {
     return <Navigate to={'/'} replace />
   }
 
-  return <Outlet />
+  return children ?? <Outlet />
 }
