@@ -147,7 +147,7 @@ const Login = () => {
           phoneNumber,
           selectedCountry.dialCode
         )
-        console.log(response, 'RESPONSE')
+        
         if (response.status === 'success') {
           toast.success('OTP is send to phone number')
           setUserPhoneData({
@@ -302,7 +302,7 @@ const Login = () => {
             <p
               className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
             >
-              Enter yourphone number to receive an OTP
+              Enter your phone number to receive an OTP
             </p>
 
             <div className="relative">
