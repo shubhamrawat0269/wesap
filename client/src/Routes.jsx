@@ -66,7 +66,6 @@ const router = createBrowserRouter([
         <Login />
       </PublicRoute>
     ),
-    errorElement: <NotFound />,
   },
 ])
 

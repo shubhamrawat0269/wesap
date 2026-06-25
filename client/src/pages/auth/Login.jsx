@@ -91,7 +91,6 @@ const Login = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [email, setEmail] = useState('')
   const [profilePicture, setProfilePicture] = useState(null)
-  // avatar not yet included
   const [selectedAvatar, setSelectedAvatar] = useState(avatars[0])
   const [profilePictureFile, setProfilePictureFile] = useState(null)
   const [showDropdown, setShowDropdown] = useState(false)
